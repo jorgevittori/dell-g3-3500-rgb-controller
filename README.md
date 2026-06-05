@@ -87,7 +87,7 @@ O controle de cor conversa diretamente com o dispositivo HID `VID_187C/PID_0550`
 
 A pasta raiz `DellG3RgbController` pode ser movida para outro local do mesmo computador. Os perfis em `colors`, os atalhos em `scripts` e o codigo em `src` usam caminhos relativos entre si.
 
-O unico requisito externo e o Python usado para executar `src/core/dell_g3_rgb.py`. O script `scripts/rgb.ps1` procura nesta ordem:
+O programa usa Python para executar `src/core/dell_g3_rgb.py`. O script `scripts/rgb.ps1` procura nesta ordem:
 
 ```text
 runtime\python\python.exe
@@ -95,9 +95,11 @@ py -3, quando o Python Launcher do Windows existir
 python disponivel no PATH do Windows
 ```
 
-Para deixar o pacote totalmente independente em outro computador, inclua um Python embutido em `runtime\python\python.exe` ou instale Python no Windows.
+Se nenhuma dessas opcoes existir, o proprio script oferece baixar um Python portatil para `runtime\python`. Esse download nao instala Python globalmente, nao muda o PATH do Windows e nao precisa de administrador.
 
-A pasta `runtime` e ignorada pelo Git. Isso permite manter um Python local junto do programa sem subir esse runtime para o repositorio.
+Depois do primeiro download, os perfis funcionam offline usando o runtime local.
+
+A pasta `runtime` e ignorada pelo Git. O repositorio versiona a logica de auto-download, e o runtime e recriado automaticamente quando faltar.
 
 ## Editando Um Perfil
 

@@ -20,6 +20,47 @@ param(
 
 $Script = Join-Path $PSScriptRoot "..\src\core\dell_g3_rgb.py"
 $BundledPython = Join-Path $PSScriptRoot "..\runtime\python\python.exe"
+$RuntimeDir = Join-Path $PSScriptRoot "..\runtime\python"
+$PythonDownloadUrl = "https://www.python.org/ftp/python/3.12.10/python-3.12.10-embed-amd64.zip"
+
+function Install-LocalPython {
+    Write-Host ""
+    Write-Host "Python was not found." -ForegroundColor Yellow
+    Write-Host "Dell G3 RGB Controller can download a local portable Python into this folder."
+    Write-Host "This will not install Python globally, will not change PATH, and will not require admin."
+    Write-Host ""
+
+    $answer = Read-Host "Download local Python runtime now? [Y/N]"
+    if ($answer -notin @("Y", "y", "S", "s")) {
+        Write-Error "Python is required. Install Python, add it to PATH, or run again and accept the local runtime download."
+        exit 1
+    }
+
+    $tempZip = Join-Path ([System.IO.Path]::GetTempPath()) "dell-g3-rgb-python-3.12.10-embed-amd64.zip"
+
+    New-Item -ItemType Directory -Force -Path $RuntimeDir | Out-Null
+
+    try {
+        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+        Write-Host "Downloading portable Python..." -ForegroundColor Cyan
+        Invoke-WebRequest -Uri $PythonDownloadUrl -OutFile $tempZip -UseBasicParsing
+
+        Write-Host "Extracting runtime..." -ForegroundColor Cyan
+        Expand-Archive -LiteralPath $tempZip -DestinationPath $RuntimeDir -Force
+
+        if (-not (Test-Path -LiteralPath $BundledPython)) {
+            Write-Error "Python runtime download finished, but python.exe was not found in runtime\python."
+            exit 1
+        }
+
+        Write-Host "Local Python runtime is ready." -ForegroundColor Green
+        Write-Host ""
+    } finally {
+        if (Test-Path -LiteralPath $tempZip) {
+            Remove-Item -LiteralPath $tempZip -Force
+        }
+    }
+}
 
 if (Test-Path -LiteralPath $BundledPython) {
     $Python = $BundledPython
@@ -31,8 +72,9 @@ if (Test-Path -LiteralPath $BundledPython) {
     $Python = "python"
     $PythonArgs = @()
 } else {
-    Write-Error "Python was not found. Install Python, add it to PATH, or place an embedded Python at runtime\python\python.exe."
-    exit 1
+    Install-LocalPython
+    $Python = $BundledPython
+    $PythonArgs = @()
 }
 
 if ($Command -eq "color") {
