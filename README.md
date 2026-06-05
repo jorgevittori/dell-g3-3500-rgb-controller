@@ -14,13 +14,21 @@ Para ligar ou preparar o teclado RGB depois que o Windows iniciar, use:
 scripts\TURN_ON.bat
 ```
 
-Esse arquivo pode pedir permissao de administrador. Ele nao escolhe cor; ele apenas acorda/reseta o controlador RGB interno da Dell quando o teclado nao responde.
+Esse arquivo liga a luz do teclado em branco com brilho 100%.
 
 Para desligar a luz:
 
 ```text
 scripts\TURN_OFF.bat
 ```
+
+Se o controlador RGB nao aparecer para o Windows ou parar de responder depois de reiniciar, use:
+
+```text
+scripts\WAKE_CONTROLLER_ADMIN.bat
+```
+
+Esse arquivo pode pedir permissao de administrador. Ele nao escolhe cor; ele apenas acorda/reseta o controlador RGB interno da Dell quando o teclado nao responde.
 
 Para aplicar um perfil de cor, abra a pasta `colors` e execute um dos arquivos `PROFILE_*.bat`.
 
