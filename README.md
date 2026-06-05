@@ -95,11 +95,11 @@ py -3, quando o Python Launcher do Windows existir
 python disponivel no PATH do Windows
 ```
 
-Se nenhuma dessas opcoes existir, o proprio script oferece baixar um Python portatil para `runtime\python`. Esse download nao instala Python globalmente, nao muda o PATH do Windows e nao precisa de administrador.
+Se nenhuma dessas opcoes existir, o proprio script baixa automaticamente um Python portatil para `runtime\python`. Esse download nao instala Python globalmente, nao muda o PATH do Windows e nao precisa de administrador.
 
-Depois do primeiro download, os perfis funcionam offline usando o runtime local.
+Depois do primeiro download, os perfis funcionam offline usando o runtime local. O repositorio tambem inclui o runtime portatil para que o projeto clonado ja tenha tudo dentro da pasta.
 
-A pasta `runtime` e ignorada pelo Git. O repositorio versiona a logica de auto-download, e o runtime e recriado automaticamente quando faltar.
+A logica de auto-download continua existindo como recuperacao: se `runtime\python` for apagado, o programa recria essa pasta automaticamente no proximo uso com internet.
 
 ## Editando Um Perfil
 

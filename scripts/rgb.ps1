@@ -26,15 +26,9 @@ $PythonDownloadUrl = "https://www.python.org/ftp/python/3.12.10/python-3.12.10-e
 function Install-LocalPython {
     Write-Host ""
     Write-Host "Python was not found." -ForegroundColor Yellow
-    Write-Host "Dell G3 RGB Controller can download a local portable Python into this folder."
-    Write-Host "This will not install Python globally, will not change PATH, and will not require admin."
+    Write-Host "Dell G3 RGB Controller will download a local portable Python into this folder."
+    Write-Host "This does not install Python globally, does not change PATH, and does not require admin."
     Write-Host ""
-
-    $answer = Read-Host "Download local Python runtime now? [Y/N]"
-    if ($answer -notin @("Y", "y", "S", "s")) {
-        Write-Error "Python is required. Install Python, add it to PATH, or run again and accept the local runtime download."
-        exit 1
-    }
 
     $tempZip = Join-Path ([System.IO.Path]::GetTempPath()) "dell-g3-rgb-python-3.12.10-embed-amd64.zip"
 
@@ -55,6 +49,9 @@ function Install-LocalPython {
 
         Write-Host "Local Python runtime is ready." -ForegroundColor Green
         Write-Host ""
+    } catch {
+        Write-Error "Could not download local Python runtime. Check your internet connection and try again. Details: $($_.Exception.Message)"
+        exit 1
     } finally {
         if (Test-Path -LiteralPath $tempZip) {
             Remove-Item -LiteralPath $tempZip -Force
